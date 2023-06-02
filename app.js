@@ -1,4 +1,5 @@
 require('dotenv').config()
+const ngrok = require('ngrok');
 
 const express = require('express')
 const app = express()
@@ -26,4 +27,15 @@ const start = async() => {
     }
 }
 
+const startNgrok = async() => {
+    try {
+        await ngrok.authtoken(process.env.NGROK_AUTHTOKEN)
+        const url = await ngrok.connect(port);
+        console.log(url)
+    } catch (error) {
+        console.log(error)
+    }
+};
+
 start()
+startNgrok()

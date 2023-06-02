@@ -11,7 +11,7 @@ const getBalance = (req,res) => {
     if (currentBalance) {
         res.status(200).send(String(currentBalance.balance))
     } else {
-        res.status(400).send(String(0))
+        res.status(404).send(String(0))
     }
 
 }

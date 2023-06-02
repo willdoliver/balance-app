@@ -11,6 +11,10 @@ const createEvent = (req,res) => {
     console.log("req.body: ")
     console.log(req.body)
 
+    if (!eventTypes.includes(type)) {
+        return res.status(404).send(String(0))
+    }
+
     switch (type) {
         case "deposit":
             console.log("call deposit")
@@ -47,41 +51,60 @@ const createEvent = (req,res) => {
 }
 
 const depositValue = (account, amount) => {
-    if (allBalances[account]) {
-        amount += allBalances[account].balance
-    }
+    try {
+        if (allBalances[account]) {
+            amount += allBalances[account].balance
+        }
 
-    allBalances[account] = {
-        "id": account,
-        "balance": amount
-    }
+        allBalances[account] = {
+            "id": account,
+            "balance": amount
+        }
 
-    console.log("All Balances")
-    console.log(allBalances)
-    console.log("Current Balances")
-    console.log(allBalances[account])
+        console.log("All Balances")
+        console.log(allBalances)
+        console.log("Current Balances")
+        console.log(allBalances[account])
+    } catch (error) {
+        console.log("depositValue:error: " + error)
+    }
 }
 
 const withdrawValue = (account, amount) => {
-    console.log(allBalances)
-    const currentBalance = allBalances[account].balance
-    allBalances[account].balance = currentBalance - amount
+    try{
+        console.log(allBalances)
+        const currentBalance = allBalances[account].balance
+        allBalances[account].balance = currentBalance - amount
+    } catch (error) {
+        console.log("withdrawValue:error: " + error)
+    }
 }
 
 const checkAccountExists = (account) => {
-    if (allBalances[account]) {
-        return true
-    } else {
+    try {
+        if (allBalances[account]) {
+            return true
+        } else {
+            return false
+        }
+    } catch (error) {
+        console.log("checkAccountExists:error: " + error)
         return false
     }
 }
 
 const checkSufficientFunds = (originAccount, amount) => {
-    value = allBalances[originAccount].balance
-    if (value < amount) {
+    try {
+        value = allBalances[originAccount].balance
+
+        if (value < amount) {
+            return false
+        } else {
+            return true
+        }
+    } catch (error) {
+        console.log("checkSufficientFunds:error: " + error)
         return false
-    } else {
-        return true
     }
 }
 
